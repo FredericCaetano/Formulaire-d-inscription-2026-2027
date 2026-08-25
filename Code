@@ -60,7 +60,7 @@ function configurerProprietes_() {
   const proprietes = PropertiesService.getScriptProperties();
   proprietes.setProperties({
     WINAMAX_LIEN_AFFILIATION: "COLLER_ICI_PUIS_EXECUTER_PUIS_EFFACER",
-    BLINDVALET_LIEN_SITE: "https://app.blindvalet.com/lobby",
+    BLINDVALET_LIEN_SITE: "COLLER_ICI_PUIS_EXECUTER_PUIS_EFFACER",
     BLINDVALET_CODE_CLUB: "COLLER_ICI_PUIS_EXECUTER_PUIS_EFFACER"
   });
 }
@@ -118,6 +118,7 @@ function doPost(e) {
 
     const emailJoueur = (data.email || "").trim();
     if (emailJoueur) {
+      envoyerEmailConfirmationJoueur_(data, emailJoueur);
       if (data.pasWinamax === "true") {
         envoyerEmailWinamax_(data, emailJoueur);
       }
@@ -183,6 +184,22 @@ function envoyerEmailRecap_(data, dateNaissance, winamax, blindValet) {
     "— Cette ligne a également été ajoutée automatiquement dans l'onglet \"" + NOM_ONGLET + "\" du Google Sheet.";
 
   MailApp.sendEmail(EMAIL_DESTINATAIRE, sujet, corps);
+}
+
+function envoyerEmailConfirmationJoueur_(data, emailJoueur) {
+  const prenom = data.prenom || "";
+  const sujet = "19PokerClub — Inscription confirmée, saison 2026-2027";
+
+  const corps =
+    "Bonjour " + prenom + ",\n\n" +
+    "Ton inscription au 19PokerClub pour la saison 2026-2027 est bien enregistrée. " +
+    "Bienvenue dans le club !\n\n" +
+    "On revient vers toi très vite avec les prochaines infos (calendrier, événements...).\n\n" +
+    "N'hésite pas à nous contacter si tu as la moindre question.\n\n" +
+    "Sportivement,\n" +
+    "Le bureau du 19PokerClub";
+
+  MailApp.sendEmail(emailJoueur, sujet, corps);
 }
 
 function envoyerEmailWinamax_(data, emailJoueur) {
