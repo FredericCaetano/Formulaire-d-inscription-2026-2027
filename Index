@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>19PokerClub — Inscription saison 2026-2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --felt-dark:#0a2620;
+    --felt:#10362a;
+    --felt-light:#164536;
+    --gold:#c6a15b;
+    --gold-bright:#e0c383;
+    --cream:#f3ecdd;
+    --cream-dim:#cfc4a8;
+    --ink:#0a2620;
+    --wine:#7a2331;
+    --field-bg:#faf7ef;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+
+  body{
+    font-family:'Inter',sans-serif;
+    color:var(--cream);
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255,255,255,0.04), transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(0,0,0,0.35), transparent 55%),
+      repeating-linear-gradient(115deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 6px),
+      linear-gradient(160deg, var(--felt) 0%, var(--felt-dark) 100%);
+    min-height:100vh;
+    padding:48px 16px 80px;
+  }
+
+  .wrap{
+    max-width:720px;
+    margin:0 auto;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    text-align:center;
+    margin-bottom:36px;
+  }
+  .hero .suits{
+    letter-spacing:14px;
+    color:var(--gold);
+    font-size:20px;
+    margin-bottom:10px;
+    opacity:0.85;
+  }
+  .hero h1{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:clamp(32px, 6vw, 52px);
+    line-height:1.05;
+    margin:0 0 8px;
+    color:var(--cream);
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--gold-bright);
+  }
+  .hero p{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:17px;
+    color:var(--cream-dim);
+    margin:0;
+  }
+
+  /* ---------- Table rail (card frame) ---------- */
+  .rail{
+    border:1px solid rgba(198,161,91,0.35);
+    border-radius:22px;
+    padding:6px;
+    background:linear-gradient(180deg, rgba(198,161,91,0.08), transparent 30%);
+  }
+  .felt-card{
+    background:var(--felt-light);
+    border:1px solid rgba(198,161,91,0.55);
+    border-radius:18px;
+    padding:38px clamp(20px,5vw,48px) 44px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15), 0 20px 50px rgba(0,0,0,0.35);
+  }
+
+  fieldset{
+    border:none;
+    margin:0 0 34px;
+    padding:0;
+  }
+  fieldset:last-of-type{margin-bottom:0;}
+
+  .legend-row{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    margin-bottom:18px;
+    padding-bottom:10px;
+    border-bottom:1px solid rgba(198,161,91,0.3);
+  }
+  .legend-suit{
+    font-family:'Fraunces',serif;
+    font-size:26px;
+    color:var(--gold);
+    line-height:1;
+  }
+  .legend-suit.red{color:#b5495b;}
+  legend, .legend-title{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:20px;
+    color:var(--cream);
+  }
+  .legend-sub{
+    font-size:12.5px;
+    color:var(--cream-dim);
+    margin-left:auto;
+    font-style:italic;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px 20px;
+  }
+  .grid .full{grid-column:1 / -1;}
+  @media (max-width:560px){
+    .grid{grid-template-columns:1fr;}
+  }
+
+  .field label{
+    display:block;
+    font-size:12.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+    margin-bottom:6px;
+    font-weight:600;
+  }
+
+  input[type=text], input[type=tel], input[type=email], select{
+    width:100%;
+    padding:12px 14px;
+    border-radius:9px;
+    border:1px solid rgba(10,38,32,0.15);
+    background:var(--field-bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-size:15px;
+    outline:none;
+    transition:box-shadow .15s ease, border-color .15s ease;
+    appearance:none;
+    -webkit-appearance:none;
+  }
+  select{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9'><path d='M1 1l6 6 6-6' stroke='%230a2620' stroke-width='2' fill='none' fill-rule='evenodd'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    padding-right:36px;
+  }
+  input:focus, select:focus{
+    border-color:var(--gold);
+    box-shadow:0 0 0 3px rgba(198,161,91,0.35);
+  }
+  input:disabled{
+    background:#e4ded0;
+    color:#8a8371;
+  }
+  .field small.err{
+    display:block;
+    color:#ffb4b4;
+    font-size:12px;
+    margin-top:5px;
+    min-height:14px;
+  }
+
+  .dob-row{
+    display:grid;
+    grid-template-columns:1fr 1.4fr 1fr;
+    gap:10px;
+  }
+
+  .checkline{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-top:9px;
+    font-size:13px;
+    color:var(--cream-dim);
+  }
+  .checkline input{
+    width:16px;height:16px;
+    accent-color:var(--gold);
+    cursor:pointer;
+  }
+  .checkline label{
+    margin:0;
+    text-transform:none;
+    letter-spacing:0;
+    font-weight:400;
+    color:var(--cream-dim);
+    cursor:pointer;
+  }
+
+  /* ---------- Submit ---------- */
+  .submit-row{
+    margin-top:38px;
+    text-align:center;
+  }
+  button[type=submit]{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:18px;
+    letter-spacing:0.02em;
+    color:var(--felt-dark);
+    background:linear-gradient(180deg, var(--gold-bright), var(--gold));
+    border:none;
+    border-radius:999px;
+    padding:15px 44px;
+    cursor:pointer;
+    box-shadow:0 10px 24px rgba(0,0,0,0.3);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  button[type=submit]:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,0.38);}
+  button[type=submit]:disabled{opacity:0.6;cursor:wait;transform:none;}
+
+  .status{
+    margin-top:18px;
+    font-size:14px;
+    min-height:20px;
+  }
+  .status.ok{color:#a8e0b8;}
+  .status.bad{color:#ffb4b4;}
+
+  .success-panel{
+    display:none;
+    text-align:center;
+    padding:20px 10px 4px;
+  }
+  .success-panel .suit-big{
+    font-family:'Fraunces',serif;
+    font-size:40px;
+    color:var(--gold);
+    margin-bottom:8px;
+  }
+  .success-panel h2{
+    font-family:'Fraunces',serif;
+    font-size:26px;
+    margin:0 0 8px;
+  }
+  .success-panel p{color:var(--cream-dim);font-size:14.5px;}
+
+  footer{
+    text-align:center;
+    margin-top:30px;
+    color:var(--cream-dim);
+    font-size:12px;
+    letter-spacing:0.04em;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="suits">♠ ♥ ♦ ♣</div>
+    <h1>Prenez place à la <em>table</em></h1>
+    <p>Bulletin d'inscription — saison 2026 / 2027</p>
+  </div>
+
+  <div class="rail">
+    <div class="felt-card">
+
+      <form id="inscriptionForm">
+
+        <fieldset>
+          <div class="legend-row">
+            <span class="legend-suit">♠</span>
+            <span class="legend-title">Identité</span>
+            <span class="legend-sub">qui êtes-vous</span>
+          </div>
+          <div class="grid">
+            <div class="field">
+              <label for="nom">Nom</label>
+              <input type="text" id="nom" name="nom" required autocomplete="family-name">
+              <small class="err"></small>
+            </div>
+            <div class="field">
+              <label for="prenom">Prénom</label>
+              <input type="text" id="prenom" name="prenom" required autocomplete="given-name">
+              <small class="err"></small>
+            </div>
+            <div class="field">
+              <label for="sexe">Sexe</label>
+              <select id="sexe" name="sexe" required>
+                <option value="" disabled selected>Choisir…</option>
+                <option value="Homme">Homme</option>
+                <option value="Femme">Femme</option>
+                <option value="Autre">Autre</option>
+              </select>
+              <small class="err"></small>
+            </div>
+            <div class="field">
+              <label>Date de naissance</label>
+              <div class="dob-row">
+                <select id="jourNaissance" name="jourNaissance" required aria-label="Jour"></select>
+                <select id="moisNaissance" name="moisNaissance" required aria-label="Mois"></select>
+                <select id="anneeNaissance" name="anneeNaissance" required aria-label="Année"></select>
+              </div>
+              <small class="err"></small>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <div class="legend-row">
+            <span class="legend-suit red">♦</span>
+            <span class="legend-title">Coordonnées</span>
+            <span class="legend-sub">pour vous joindre</span>
+          </div>
+          <div class="grid">
+            <div class="field full">
+              <label for="adresse">Adresse</label>
+              <input type="text" id="adresse" name="adresse" required autocomplete="street-address">
+              <small class="err"></small>
+            </div>
+            <div class="field">
+              <label for="codePostal">Code postal</label>
+              <input type="text" id="codePostal" name="codePostal" inputmode="numeric" maxlength="5" required autocomplete="postal-code">
+              <small class="err"></small>
+            </div>
+            <div class="field">
+              <label for="ville">Ville</label>
+              <input type="text" id="ville" name="ville" required autocomplete="address-level2">
+              <small class="err"></small>
+            </div>
+            <div class="field">
+              <label for="telephone">Numéro de téléphone</label>
+              <input type="tel" id="telephone" name="telephone" required autocomplete="tel" placeholder="06 12 34 56 78">
+              <small class="err"></small>
+            </div>
+            <div class="field">
+              <label for="email">Adresse mail</label>
+              <input type="email" id="email" name="email" required autocomplete="email">
+              <small class="err"></small>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <div class="legend-row">
+            <span class="legend-suit">♣</span>
+            <span class="legend-title">Comptes joueur</span>
+            <span class="legend-sub">vos pseudos en ligne</span>
+          </div>
+          <div class="grid">
+            <div class="field">
+              <label for="pseudoWinamax">Pseudo Winamax</label>
+              <input type="text" id="pseudoWinamax" name="pseudoWinamax" autocomplete="off">
+              <div class="checkline">
+                <input type="checkbox" id="pasWinamax" name="pasWinamax">
+                <label for="pasWinamax">Je n'ai pas de compte Winamax</label>
+              </div>
+              <small class="err"></small>
+            </div>
+            <div class="field">
+              <label for="pseudoBlindValet">Pseudo BlindValet</label>
+              <input type="text" id="pseudoBlindValet" name="pseudoBlindValet" autocomplete="off">
+              <div class="checkline">
+                <input type="checkbox" id="pasBlindValet" name="pasBlindValet">
+                <label for="pasBlindValet">Je n'ai pas de compte BlindValet</label>
+              </div>
+              <small class="err"></small>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="submit-row">
+          <button type="submit" id="submitBtn">Valider mon inscription</button>
+          <div class="status" id="statusMsg"></div>
+        </div>
+
+      </form>
+
+      <div class="success-panel" id="successPanel">
+        <div class="suit-big">♠ ♥</div>
+        <h2>Inscription enregistrée</h2>
+        <p>Bienvenue au 19PokerClub pour la saison 2026-2027.<br>Un e-mail de confirmation a été envoyé au bureau.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>19PokerClub · Brive-la-Gaillarde · Saison 2026-2027</footer>
+
+</div>
+
+<!-- iframe caché utilisé pour l'envoi vers Google Apps Script sans rechargement de page -->
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+<script>
+  // ==========================================================
+  // ⚠️ À CONFIGURER : coller ici l'URL de déploiement du
+  // Google Apps Script (voir Code.gs fourni séparément)
+  // ==========================================================
+  const SCRIPT_URL = "COLLER_ICI_URL_DU_WEB_APP_APPS_SCRIPT";
+
+  // ---- Remplissage des menus déroulants de date de naissance ----
+  const jourSel = document.getElementById('jourNaissance');
+  const moisSel = document.getElementById('moisNaissance');
+  const anneeSel = document.getElementById('anneeNaissance');
+
+  const moisNoms = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+
+  function fillSelect(sel, placeholder){
+    const opt = document.createElement('option');
+    opt.value = ""; opt.disabled = true; opt.selected = true; opt.textContent = placeholder;
+    sel.appendChild(opt);
+  }
+
+  fillSelect(jourSel, "Jour");
+  for(let d=1; d<=31; d++){
+    const o = document.createElement('option');
+    o.value = String(d).padStart(2,'0');
+    o.textContent = d;
+    jourSel.appendChild(o);
+  }
+
+  fillSelect(moisSel, "Mois");
+  moisNoms.forEach((m,i)=>{
+    const o = document.createElement('option');
+    o.value = String(i+1).padStart(2,'0');
+    o.textContent = m;
+    moisSel.appendChild(o);
+  });
+
+  fillSelect(anneeSel, "Année");
+  const anneeActuelle = new Date().getFullYear();
+  for(let y=anneeActuelle - 5; y >= anneeActuelle - 100; y--){
+    const o = document.createElement('option');
+    o.value = y;
+    o.textContent = y;
+    anneeSel.appendChild(o);
+  }
+
+  // ---- Cases "pas de compte" désactivent le champ pseudo ----
+  function bindNoAccount(checkboxId, inputId){
+    const cb = document.getElementById(checkboxId);
+    const input = document.getElementById(inputId);
+    cb.addEventListener('change', () => {
+      input.disabled = cb.checked;
+      if(cb.checked){ input.value = ""; input.required = false; }
+      else { input.required = true; }
+    });
+    input.required = true;
+  }
+  bindNoAccount('pasWinamax','pseudoWinamax');
+  bindNoAccount('pasBlindValet','pseudoBlindValet');
+
+  // ---- Validation ----
+  const form = document.getElementById('inscriptionForm');
+  const statusMsg = document.getElementById('statusMsg');
+  const submitBtn = document.getElementById('submitBtn');
+  const successPanel = document.getElementById('successPanel');
+  const hiddenIframe = document.getElementById('hidden_iframe');
+
+  function setError(fieldId, message){
+    const field = document.getElementById(fieldId).closest('.field');
+    const errEl = field.querySelector('.err');
+    errEl.textContent = message || "";
+  }
+
+  function validate(){
+    let ok = true;
+
+    ['nom','prenom'].forEach(id=>{
+      const v = document.getElementById(id).value.trim();
+      if(!v){ setError(id, "Champ requis"); ok = false; } else setError(id,"");
+    });
+
+    if(!document.getElementById('sexe').value){ setError('sexe',"Sélectionnez une option"); ok=false; } else setError('sexe',"");
+
+    if(!jourSel.value || !moisSel.value || !anneeSel.value){
+      setError('jourNaissance',"Date incomplète"); ok=false;
+    } else setError('jourNaissance',"");
+
+    const adresse = document.getElementById('adresse').value.trim();
+    if(!adresse){ setError('adresse',"Champ requis"); ok=false; } else setError('adresse',"");
+
+    const cp = document.getElementById('codePostal').value.trim();
+    if(!/^\d{5}$/.test(cp)){ setError('codePostal',"5 chiffres"); ok=false; } else setError('codePostal',"");
+
+    const ville = document.getElementById('ville').value.trim();
+    if(!ville){ setError('ville',"Champ requis"); ok=false; } else setError('ville',"");
+
+    const tel = document.getElementById('telephone').value.trim();
+    if(!/^[0-9+\s.()-]{6,20}$/.test(tel)){ setError('telephone',"Numéro invalide"); ok=false; } else setError('telephone',"");
+
+    const email = document.getElementById('email').value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ setError('email',"E-mail invalide"); ok=false; } else setError('email',"");
+
+    const pasWinamax = document.getElementById('pasWinamax').checked;
+    const pseudoWinamax = document.getElementById('pseudoWinamax').value.trim();
+    if(!pasWinamax && !pseudoWinamax){ setError('pseudoWinamax',"Pseudo requis ou cochez la case"); ok=false; } else setError('pseudoWinamax',"");
+
+    const pasBlindValet = document.getElementById('pasBlindValet').checked;
+    const pseudoBlindValet = document.getElementById('pseudoBlindValet').value.trim();
+    if(!pasBlindValet && !pseudoBlindValet){ setError('pseudoBlindValet',"Pseudo requis ou cochez la case"); ok=false; } else setError('pseudoBlindValet',"");
+
+    return ok;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    statusMsg.textContent = "";
+    statusMsg.className = "status";
+
+    if(!validate()){
+      statusMsg.textContent = "Merci de corriger les champs indiqués ci-dessus.";
+      statusMsg.classList.add('bad');
+      return;
+    }
+
+    if(SCRIPT_URL.indexOf("COLLER_ICI") !== -1){
+      statusMsg.textContent = "⚠️ L'URL du script Google (SCRIPT_URL) n'a pas encore été configurée.";
+      statusMsg.classList.add('bad');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Envoi en cours…";
+
+    // Construction d'un formulaire caché pour soumission vers l'iframe
+    // (évite les soucis de CORS avec Google Apps Script)
+    const tempForm = document.createElement('form');
+    tempForm.method = 'POST';
+    tempForm.action = SCRIPT_URL;
+    tempForm.target = 'hidden_iframe';
+
+    const dataToSend = new FormData(form);
+    for(const [key, value] of dataToSend.entries()){
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = value;
+      tempForm.appendChild(input);
+    }
+    // valeurs booléennes explicites pour les cases à cocher
+    const hiddenPasWinamax = document.createElement('input');
+    hiddenPasWinamax.type = 'hidden'; hiddenPasWinamax.name = 'pasWinamax';
+    hiddenPasWinamax.value = document.getElementById('pasWinamax').checked ? 'true' : 'false';
+    tempForm.appendChild(hiddenPasWinamax);
+
+    const hiddenPasBlindValet = document.createElement('input');
+    hiddenPasBlindValet.type = 'hidden'; hiddenPasBlindValet.name = 'pasBlindValet';
+    hiddenPasBlindValet.value = document.getElementById('pasBlindValet').checked ? 'true' : 'false';
+    tempForm.appendChild(hiddenPasBlindValet);
+
+    document.body.appendChild(tempForm);
+
+    let handled = false;
+    hiddenIframe.addEventListener('load', function onLoad(){
+      if(handled) return;
+      handled = true;
+      hiddenIframe.removeEventListener('load', onLoad);
+      form.style.display = 'none';
+      successPanel.style.display = 'block';
+      document.body.removeChild(tempForm);
+    });
+
+    // Sécurité : si l'iframe ne déclenche pas load (bloqueur, etc.)
+    setTimeout(() => {
+      if(!handled){
+        handled = true;
+        form.style.display = 'none';
+        successPanel.style.display = 'block';
+      }
+    }, 6000);
+
+    tempForm.submit();
+  });
+</script>
+
+</body>
+</html>
