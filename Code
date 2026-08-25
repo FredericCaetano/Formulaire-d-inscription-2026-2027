@@ -21,16 +21,49 @@
  *  lui-même (Extensions > Apps Script) pour que
  *  SpreadsheetApp.getActiveSpreadsheet() pointe automatiquement
  *  vers le bon fichier.
+ *
+ *  SÉCURITÉ : ce fichier ne contient AUCUN secret en dur (pas de
+ *  lien d'affiliation, pas de code d'entrée club). Ces valeurs
+ *  sont stockées dans les "Propriétés du script" (Paramètres du
+ *  projet > Propriétés du script), qui ne sont JAMAIS visibles
+ *  dans le code source ni sur GitHub. Ce fichier peut donc être
+ *  publié tel quel sur un dépôt public.
+ *
+ *  CONFIGURATION (à faire une seule fois, DANS L'ÉDITEUR APPS
+ *  SCRIPT EN LIGNE — jamais dans un fichier committé) :
+ *   1. Ouvre l'éditeur Apps Script du Sheet.
+ *   2. Icône ⚙️ "Paramètres du projet" (menu de gauche).
+ *   3. Section "Propriétés du script" > "Ajouter une propriété
+ *      de script", et ajoute les 3 clés suivantes avec leurs
+ *      vraies valeurs :
+ *        - WINAMAX_LIEN_AFFILIATION
+ *        - BLINDVALET_LIEN_SITE
+ *        - BLINDVALET_CODE_CLUB
+ *
+ *   (Alternative rapide : renseigne temporairement tes valeurs
+ *   dans configurerProprietes_() ci-dessous, exécute cette
+ *   fonction UNE FOIS depuis l'éditeur, PUIS efface ces valeurs
+ *   de ce fichier avant tout commit Git — elles resteront
+ *   enregistrées côté Google.)
  */
 
 const NOM_ONGLET = "Inscriptions";
 const EMAIL_DESTINATAIRE = "19pokerclub@gmail.com";
 
-// ⚠️ À CONFIGURER avant mise en production ------------------------
-const WINAMAX_LIEN_AFFILIATION = "COLLER_ICI_LE_LIEN_AFFILIATION_WINAMAX";
-const BLINDVALET_LIEN_SITE = "https://app.blindvalet.com/lobby";
-const BLINDVALET_CODE_CLUB = "----";
-// -------------------------------------------------------------------
+/**
+ * À lancer UNE SEULE FOIS depuis l'éditeur Apps Script (menu déroulant
+ * de fonction en haut > configurerProprietes_ > bouton "Exécuter").
+ * Remets les valeurs à "COLLER_ICI..." (ou supprime la fonction) avant
+ * de committer ce fichier sur GitHub.
+ */
+function configurerProprietes_() {
+  const proprietes = PropertiesService.getScriptProperties();
+  proprietes.setProperties({
+    WINAMAX_LIEN_AFFILIATION: "COLLER_ICI_PUIS_EXECUTER_PUIS_EFFACER",
+    BLINDVALET_LIEN_SITE: "https://app.blindvalet.com/lobby",
+    BLINDVALET_CODE_CLUB: "COLLER_ICI_PUIS_EXECUTER_PUIS_EFFACER"
+  });
+}
 
 const ENTETES = [
   "Horodatage",
@@ -153,6 +186,9 @@ function envoyerEmailRecap_(data, dateNaissance, winamax, blindValet) {
 }
 
 function envoyerEmailWinamax_(data, emailJoueur) {
+  const proprietes = PropertiesService.getScriptProperties();
+  const lienAffiliation = proprietes.getProperty('WINAMAX_LIEN_AFFILIATION') || "(lien non configuré — voir Propriétés du script)";
+
   const prenom = data.prenom || "";
   const sujet = "19PokerClub — Crée ton compte Winamax, c'est important !";
 
@@ -162,7 +198,7 @@ function envoyerEmailWinamax_(data, emailJoueur) {
     "On a vu que tu n'avais pas encore de compte Winamax. Le club est partenaire de " +
     "Winamax, et avoir un compte est extrêmement important pour toi : cela te permet " +
     "de profiter des avantages du partenariat et de rester connecté à l'actualité du club.\n\n" +
-    "Crée ton compte dès maintenant via notre lien : " + WINAMAX_LIEN_AFFILIATION + "\n\n" +
+    "Crée ton compte dès maintenant via notre lien : " + lienAffiliation + "\n\n" +
     "N'hésite pas à revenir vers nous si tu as la moindre question.\n\n" +
     "Sportivement,\n" +
     "Le bureau du 19PokerClub";
@@ -171,6 +207,10 @@ function envoyerEmailWinamax_(data, emailJoueur) {
 }
 
 function envoyerEmailBlindValet_(data, emailJoueur) {
+  const proprietes = PropertiesService.getScriptProperties();
+  const lienSite = proprietes.getProperty('BLINDVALET_LIEN_SITE') || "(lien non configuré — voir Propriétés du script)";
+  const codeClub = proprietes.getProperty('BLINDVALET_CODE_CLUB') || "(code non configuré — voir Propriétés du script)";
+
   const prenom = data.prenom || "";
   const sujet = "19PokerClub — Rejoins-nous sur BlindValet (indispensable)";
 
@@ -181,8 +221,8 @@ function envoyerEmailBlindValet_(data, emailJoueur) {
     "tous nos événements et tournois se déroulent sur BlindValet, donc sans compte tu " +
     "ne pourras pas t'inscrire ni suivre le déroulement des soirées.\n\n" +
     "Voici la marche à suivre :\n" +
-    "1. Crée ton compte sur le site : " + BLINDVALET_LIEN_SITE + "\n" +
-    "2. Une fois ton compte créé, rejoins le club en utilisant le code d'entrée suivant : " + BLINDVALET_CODE_CLUB + "\n" +
+    "1. Crée ton compte sur le site : " + lienSite + "\n" +
+    "2. Une fois ton compte créé, rejoins le club en utilisant le code d'entrée suivant : " + codeClub + "\n" +
     "3. Vérifie que tu apparais bien dans la liste des membres du 19PokerClub.\n\n" +
     "N'hésite pas à revenir vers nous si tu rencontres une difficulté.\n\n" +
     "Sportivement,\n" +
