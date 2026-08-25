@@ -29,7 +29,7 @@ const EMAIL_DESTINATAIRE = "19pokerclub@gmail.com";
 // ⚠️ À CONFIGURER avant mise en production ------------------------
 const WINAMAX_LIEN_AFFILIATION = "COLLER_ICI_LE_LIEN_AFFILIATION_WINAMAX";
 const BLINDVALET_LIEN_SITE = "https://app.blindvalet.com/lobby";
-const BLINDVALET_CODE_CLUB = "7KYQ";
+const BLINDVALET_CODE_CLUB = "----";
 // -------------------------------------------------------------------
 
 const ENTETES = [
