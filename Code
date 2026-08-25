@@ -1,0 +1,192 @@
+/**
+ * ============================================================
+ *  19PokerClub — Formulaire d'inscription saison 2026-2027
+ *  Script à coller dans l'éditeur Apps Script du Google Sheet
+ *  (menu du Sheet : Extensions > Apps Script)
+ * ============================================================
+ *
+ *  Ce script :
+ *   1) ajoute une ligne dans l'onglet "Inscriptions" du Sheet
+ *      auquel ce script est rattaché
+ *   2) envoie un e-mail récapitulatif à 19pokerclub@gmail.com
+ *   3) si la case "pas de compte Winamax" est cochée, envoie un
+ *      e-mail au joueur pour le motiver à créer un compte
+ *      (lien d'affiliation)
+ *   4) si la case "pas de compte BlindValet" est cochée, envoie
+ *      un e-mail au joueur avec la marche à suivre pour rejoindre
+ *      le club sur BlindValet (lien + code d'entrée)
+ *   5) si les deux cases sont cochées, le joueur reçoit les 2 mails
+ *
+ *  IMPORTANT : ce script doit être créé DEPUIS le Google Sheet
+ *  lui-même (Extensions > Apps Script) pour que
+ *  SpreadsheetApp.getActiveSpreadsheet() pointe automatiquement
+ *  vers le bon fichier.
+ */
+
+const NOM_ONGLET = "Inscriptions";
+const EMAIL_DESTINATAIRE = "19pokerclub@gmail.com";
+
+// ⚠️ À CONFIGURER avant mise en production ------------------------
+const WINAMAX_LIEN_AFFILIATION = "COLLER_ICI_LE_LIEN_AFFILIATION_WINAMAX";
+const BLINDVALET_LIEN_SITE = "COLLER_ICI_LE_LIEN_DU_SITE_BLINDVALET";
+const BLINDVALET_CODE_CLUB = "COLLER_ICI_LE_CODE_ENTREE_DU_CLUB";
+// -------------------------------------------------------------------
+
+const ENTETES = [
+  "Horodatage",
+  "Nom",
+  "Prénom",
+  "Sexe",
+  "Date de naissance",
+  "Adresse",
+  "Code postal",
+  "Ville",
+  "Téléphone",
+  "E-mail",
+  "Pseudo Winamax",
+  "Pseudo BlindValet"
+];
+
+function doPost(e) {
+  try {
+    const data = e.parameter;
+    const sheet = getOrCreateSheet_();
+
+    const dateNaissance = formatDateNaissance_(
+      data.jourNaissance,
+      data.moisNaissance,
+      data.anneeNaissance
+    );
+
+    const winamax = (data.pasWinamax === "true")
+      ? "Pas de compte"
+      : (data.pseudoWinamax || "");
+
+    const blindValet = (data.pasBlindValet === "true")
+      ? "Pas de compte"
+      : (data.pseudoBlindValet || "");
+
+    sheet.appendRow([
+      new Date(),
+      data.nom || "",
+      data.prenom || "",
+      data.sexe || "",
+      dateNaissance,
+      data.adresse || "",
+      data.codePostal || "",
+      data.ville || "",
+      data.telephone || "",
+      data.email || "",
+      winamax,
+      blindValet
+    ]);
+
+    envoyerEmailRecap_(data, dateNaissance, winamax, blindValet);
+
+    const emailJoueur = (data.email || "").trim();
+    if (emailJoueur) {
+      if (data.pasWinamax === "true") {
+        envoyerEmailWinamax_(data, emailJoueur);
+      }
+      if (data.pasBlindValet === "true") {
+        envoyerEmailBlindValet_(data, emailJoueur);
+      }
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: "success" }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: "error", message: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// Utile pour vérifier rapidement que le déploiement répond (test dans le navigateur)
+function doGet(e) {
+  return ContentService
+    .createTextOutput("Le service d'inscription 19PokerClub est actif.")
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+function getOrCreateSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(NOM_ONGLET);
+  if (!sheet) {
+    sheet = ss.insertSheet(NOM_ONGLET);
+  }
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(ENTETES);
+    sheet.getRange(1, 1, 1, ENTETES.length).setFontWeight("bold");
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+function formatDateNaissance_(jour, mois, annee) {
+  if (!jour || !mois || !annee) return "";
+  return jour + "/" + mois + "/" + annee;
+}
+
+function envoyerEmailRecap_(data, dateNaissance, winamax, blindValet) {
+  const sujet = "Nouvelle inscription 19PokerClub 2026-2027 — " +
+    (data.prenom || "") + " " + (data.nom || "");
+
+  const corps =
+    "Une nouvelle inscription vient d'être enregistrée pour la saison 2026-2027.\n\n" +
+    "Nom : " + (data.nom || "") + "\n" +
+    "Prénom : " + (data.prenom || "") + "\n" +
+    "Sexe : " + (data.sexe || "") + "\n" +
+    "Date de naissance : " + dateNaissance + "\n" +
+    "Adresse : " + (data.adresse || "") + "\n" +
+    "Code postal : " + (data.codePostal || "") + "\n" +
+    "Ville : " + (data.ville || "") + "\n" +
+    "Téléphone : " + (data.telephone || "") + "\n" +
+    "E-mail : " + (data.email || "") + "\n" +
+    "Pseudo Winamax : " + winamax + "\n" +
+    "Pseudo BlindValet : " + blindValet + "\n\n" +
+    "— Cette ligne a également été ajoutée automatiquement dans l'onglet \"" + NOM_ONGLET + "\" du Google Sheet.";
+
+  MailApp.sendEmail(EMAIL_DESTINATAIRE, sujet, corps);
+}
+
+function envoyerEmailWinamax_(data, emailJoueur) {
+  const prenom = data.prenom || "";
+  const sujet = "19PokerClub — Crée ton compte Winamax, c'est important !";
+
+  const corps =
+    "Bonjour " + prenom + ",\n\n" +
+    "Merci pour ton inscription au 19PokerClub pour la saison 2026-2027 !\n\n" +
+    "On a vu que tu n'avais pas encore de compte Winamax. Le club est partenaire de " +
+    "Winamax, et avoir un compte est extrêmement important pour toi : cela te permet " +
+    "de profiter des avantages du partenariat et de rester connecté à l'actualité du club.\n\n" +
+    "Crée ton compte dès maintenant via notre lien : " + WINAMAX_LIEN_AFFILIATION + "\n\n" +
+    "N'hésite pas à revenir vers nous si tu as la moindre question.\n\n" +
+    "Sportivement,\n" +
+    "Le bureau du 19PokerClub";
+
+  MailApp.sendEmail(emailJoueur, sujet, corps);
+}
+
+function envoyerEmailBlindValet_(data, emailJoueur) {
+  const prenom = data.prenom || "";
+  const sujet = "19PokerClub — Rejoins-nous sur BlindValet (indispensable)";
+
+  const corps =
+    "Bonjour " + prenom + ",\n\n" +
+    "Merci pour ton inscription au 19PokerClub pour la saison 2026-2027 !\n\n" +
+    "On a vu que tu n'avais pas encore de compte BlindValet. C'est indispensable : " +
+    "tous nos événements et tournois se déroulent sur BlindValet, donc sans compte tu " +
+    "ne pourras pas t'inscrire ni suivre le déroulement des soirées.\n\n" +
+    "Voici la marche à suivre :\n" +
+    "1. Crée ton compte sur le site : " + BLINDVALET_LIEN_SITE + "\n" +
+    "2. Une fois ton compte créé, rejoins le club en utilisant le code d'entrée suivant : " + BLINDVALET_CODE_CLUB + "\n" +
+    "3. Vérifie que tu apparais bien dans la liste des membres du 19PokerClub.\n\n" +
+    "N'hésite pas à revenir vers nous si tu rencontres une difficulté.\n\n" +
+    "Sportivement,\n" +
+    "Le bureau du 19PokerClub";
+
+  MailApp.sendEmail(emailJoueur, sujet, corps);
+}
