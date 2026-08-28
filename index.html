@@ -206,6 +206,73 @@
     cursor:pointer;
   }
 
+  /* ---------- Formule d'adhésion ---------- */
+  .formule-options{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  @media (max-width:560px){
+    .formule-options{grid-template-columns:1fr;}
+  }
+  .formule-card{
+    position:relative;
+    display:block;
+    cursor:pointer;
+    border:1.5px solid rgba(198,161,91,0.4);
+    border-radius:14px;
+    padding:18px 18px 20px;
+    background:rgba(10,38,32,0.25);
+    transition:border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .formule-card:hover{border-color:var(--gold);transform:translateY(-1px);}
+  .formule-card input{
+    position:absolute;
+    top:16px; right:16px;
+    width:18px;height:18px;
+    accent-color:var(--gold);
+    cursor:pointer;
+  }
+  .formule-card:has(input:checked){
+    border-color:var(--gold);
+    background:rgba(198,161,91,0.14);
+    box-shadow:0 0 0 1px var(--gold);
+  }
+  .formule-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:8px;
+    padding-right:26px;
+    margin-bottom:8px;
+  }
+  .formule-title{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:17px;
+    color:var(--cream);
+  }
+  .formule-price{
+    font-family:'Fraunces',serif;
+    font-weight:700;
+    font-size:17px;
+    color:var(--gold-bright);
+    white-space:nowrap;
+  }
+  .formule-desc{
+    margin:0;
+    font-size:13px;
+    line-height:1.5;
+    color:var(--cream-dim);
+  }
+  #formuleErr{
+    display:block;
+    color:#ffb4b4;
+    font-size:12px;
+    margin-top:10px;
+    min-height:14px;
+  }
+
   /* ---------- Submit ---------- */
   .submit-row{
     margin-top:38px;
@@ -270,7 +337,7 @@
   <div class="hero">
     <div class="suits">♠ ♥ ♦ ♣</div>
     <h1>Prenez place à la <em>table</em></h1>
-    <p>Bulletin d'inscription — 19PokerClub — saison 2026 / 2027</p>
+    <p>Bulletin d'inscription — saison 2026 / 2027</p>
   </div>
 
   <div class="rail">
@@ -315,6 +382,37 @@
               <small class="err"></small>
             </div>
           </div>
+        </fieldset>
+
+        <fieldset>
+          <div class="legend-row">
+            <span class="legend-suit red">♥</span>
+            <span class="legend-title">Formule d'adhésion</span>
+            <span class="legend-sub">obligatoire</span>
+          </div>
+          <div class="formule-options">
+            <label class="formule-card" for="formuleChampionnat">
+              <input type="radio" id="formuleChampionnat" name="formule" value="Pack Championnat - 60€" required>
+              <div class="formule-content">
+                <div class="formule-head">
+                  <span class="formule-title">Pack Championnat</span>
+                  <span class="formule-price">60€</span>
+                </div>
+                <p class="formule-desc">Participation à tous les événements du club, Live ou Online, via notre partenaire Winamax.</p>
+              </div>
+            </label>
+            <label class="formule-card" for="formuleAdherent">
+              <input type="radio" id="formuleAdherent" name="formule" value="Adhérent 19PokerClub - 10€" required>
+              <div class="formule-content">
+                <div class="formule-head">
+                  <span class="formule-title">Adhérent 19PokerClub</span>
+                  <span class="formule-price">10€</span>
+                </div>
+                <p class="formule-desc">Pour les amis du 19PokerClub — ne permet pas la participation aux championnats Live du club.</p>
+              </div>
+            </label>
+          </div>
+          <small class="err" id="formuleErr"></small>
         </fieldset>
 
         <fieldset>
@@ -408,7 +506,7 @@
   // ⚠️ À CONFIGURER : coller ici l'URL de déploiement du
   // Google Apps Script (voir Code.gs fourni séparément)
   // ==========================================================
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvszqkqfCHYD2icfjd-TEHp_NyKZziPYHvg3iT5qwZhVMjuY9_Q2e1eEkVXlOM24d8/exec";
+  const SCRIPT_URL = "COLLER_ICI_URL_DU_WEB_APP_APPS_SCRIPT";
 
   // ---- Remplissage des menus déroulants de date de naissance ----
   const jourSel = document.getElementById('jourNaissance');
@@ -484,6 +582,10 @@
     });
 
     if(!document.getElementById('sexe').value){ setError('sexe',"Sélectionnez une option"); ok=false; } else setError('sexe',"");
+
+    const formuleChoisie = document.querySelector('input[name="formule"]:checked');
+    const formuleErrEl = document.getElementById('formuleErr');
+    if(!formuleChoisie){ formuleErrEl.textContent = "Choisissez une formule d'adhésion"; ok=false; } else { formuleErrEl.textContent = ""; }
 
     if(!jourSel.value || !moisSel.value || !anneeSel.value){
       setError('jourNaissance',"Date incomplète"); ok=false;
