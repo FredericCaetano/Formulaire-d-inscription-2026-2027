@@ -207,10 +207,47 @@
   }
 
   /* ---------- Formule d'adhésion ---------- */
+  .decouverte-box{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:14px 16px;
+    border:1.5px dashed rgba(198,161,91,0.5);
+    border-radius:12px;
+    background:rgba(198,161,91,0.06);
+    margin-bottom:18px;
+  }
+  .decouverte-box input{
+    width:18px;height:18px;
+    margin-top:2px;
+    accent-color:var(--gold);
+    cursor:pointer;
+    flex:0 0 auto;
+  }
+  .decouverte-box label{
+    margin:0;
+    text-transform:none;
+    letter-spacing:0;
+    font-weight:400;
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--cream-dim);
+    cursor:pointer;
+  }
+  .decouverte-box label strong{
+    color:var(--gold-bright);
+    font-weight:600;
+  }
+  .formule-options.formule-disabled{
+    opacity:0.4;
+    pointer-events:none;
+    filter:grayscale(0.5);
+  }
   .formule-options{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:16px;
+    transition:opacity .2s ease;
   }
   @media (max-width:560px){
     .formule-options{grid-template-columns:1fr;}
@@ -390,7 +427,15 @@
             <span class="legend-title">Formule d'adhésion</span>
             <span class="legend-sub">obligatoire</span>
           </div>
-          <div class="formule-options">
+
+          <div class="decouverte-box">
+            <input type="checkbox" id="etapeDecouverte" name="etapeDecouverte">
+            <label for="etapeDecouverte">
+              <strong>Étape découverte</strong> — réservée aux personnes n'ayant jamais participé aux événements du club
+            </label>
+          </div>
+
+          <div class="formule-options" id="formuleOptions">
             <label class="formule-card" for="formuleChampionnat">
               <input type="radio" id="formuleChampionnat" name="formule" value="Pack Championnat - 60€" required>
               <div class="formule-content">
@@ -506,7 +551,7 @@
   // ⚠️ À CONFIGURER : coller ici l'URL de déploiement du
   // Google Apps Script (voir Code.gs fourni séparément)
   // ==========================================================
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvszqkqfCHYD2icfjd-TEHp_NyKZziPYHvg3iT5qwZhVMjuY9_Q2e1eEkVXlOM24d8/exec";
+  const SCRIPT_URL = "COLLER_ICI_URL_DU_WEB_APP_APPS_SCRIPT";
 
   // ---- Remplissage des menus déroulants de date de naissance ----
   const jourSel = document.getElementById('jourNaissance');
@@ -560,6 +605,22 @@
   bindNoAccount('pasWinamax','pseudoWinamax');
   bindNoAccount('pasBlindValet','pseudoBlindValet');
 
+  // ---- Case "Étape découverte" désactive le choix de formule ----
+  const etapeDecouverte = document.getElementById('etapeDecouverte');
+  const formuleOptions = document.getElementById('formuleOptions');
+  const formuleRadios = document.querySelectorAll('input[name="formule"]');
+
+  etapeDecouverte.addEventListener('change', () => {
+    if(etapeDecouverte.checked){
+      formuleOptions.classList.add('formule-disabled');
+      formuleRadios.forEach(r => { r.checked = false; r.required = false; r.disabled = true; });
+      document.getElementById('formuleErr').textContent = "";
+    } else {
+      formuleOptions.classList.remove('formule-disabled');
+      formuleRadios.forEach(r => { r.required = true; r.disabled = false; });
+    }
+  });
+
   // ---- Validation ----
   const form = document.getElementById('inscriptionForm');
   const statusMsg = document.getElementById('statusMsg');
@@ -585,7 +646,7 @@
 
     const formuleChoisie = document.querySelector('input[name="formule"]:checked');
     const formuleErrEl = document.getElementById('formuleErr');
-    if(!formuleChoisie){ formuleErrEl.textContent = "Choisissez une formule d'adhésion"; ok=false; } else { formuleErrEl.textContent = ""; }
+    if(!etapeDecouverte.checked && !formuleChoisie){ formuleErrEl.textContent = "Choisissez une formule d'adhésion"; ok=false; } else { formuleErrEl.textContent = ""; }
 
     if(!jourSel.value || !moisSel.value || !anneeSel.value){
       setError('jourNaissance',"Date incomplète"); ok=false;
@@ -646,7 +707,7 @@
 
     const dataToSend = new FormData(form);
     for(const [key, value] of dataToSend.entries()){
-      if(key === 'pasWinamax' || key === 'pasBlindValet') continue; // gérés explicitement ci-dessous
+      if(key === 'pasWinamax' || key === 'pasBlindValet' || key === 'formule' || key === 'etapeDecouverte') continue; // gérés explicitement ci-dessous
       const input = document.createElement('input');
       input.type = 'hidden';
       input.name = key;
@@ -663,6 +724,20 @@
     hiddenPasBlindValet.type = 'hidden'; hiddenPasBlindValet.name = 'pasBlindValet';
     hiddenPasBlindValet.value = document.getElementById('pasBlindValet').checked ? 'true' : 'false';
     tempForm.appendChild(hiddenPasBlindValet);
+
+    // Formule d'adhésion : si "Étape découverte" est cochée, on envoie cette
+    // mention à la place du pack (désactivé, donc aucune valeur radio à lire)
+    const hiddenFormule = document.createElement('input');
+    hiddenFormule.type = 'hidden'; hiddenFormule.name = 'formule';
+    hiddenFormule.value = etapeDecouverte.checked
+      ? "Étape découverte"
+      : (document.querySelector('input[name="formule"]:checked') ? document.querySelector('input[name="formule"]:checked').value : "");
+    tempForm.appendChild(hiddenFormule);
+
+    const hiddenEtapeDecouverte = document.createElement('input');
+    hiddenEtapeDecouverte.type = 'hidden'; hiddenEtapeDecouverte.name = 'etapeDecouverte';
+    hiddenEtapeDecouverte.value = etapeDecouverte.checked ? 'true' : 'false';
+    tempForm.appendChild(hiddenEtapeDecouverte);
 
     document.body.appendChild(tempForm);
 
